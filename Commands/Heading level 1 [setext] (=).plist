@@ -9,7 +9,7 @@
 	<key>capturePattern</key>
 	<string>^([^:]*):([^:]*):(.*)$</string>
 	<key>command</key>
-	<string>#!/usr/bin/env ruby -wKU
+	<string>#!/usr/bin/env ruby18 -wKU
 
 require 'jcode'
 require ENV['TM_SUPPORT_PATH'] + '/lib/textmate'
@@ -19,6 +19,11 @@ begin
   # previous, minus another for ruby being 0 based.
   lines = STDIN.readlines
   line  = ENV['TM_LINE_NUMBER'].to_i - 2
+
+  # If line does not start with word character we insert literal tab
+  if lines[line] !~ /^\w/
+    TextMate.exit_insert_snippet("=\t")
+  end
 
   # Get length of previous line, using jlength for unicode
   length = lines[line].rstrip.jlength
@@ -32,17 +37,25 @@ end</string>
 	<string>1</string>
 	<key>input</key>
 	<string>document</string>
+	<key>inputFormat</key>
+	<string>text</string>
 	<key>lineCaptureRegister</key>
 	<string>2</string>
 	<key>name</key>
 	<string>Level 1 [setext]</string>
-	<key>output</key>
-	<string>afterSelectedText</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>atCaret</string>
 	<key>scope</key>
-	<string>text.html.markdown</string>
+	<string>text.html.markdown &amp; L:dyn.caret.begin.line</string>
 	<key>tabTrigger</key>
 	<string>=</string>
 	<key>uuid</key>
 	<string>F3A754C3-CE6B-11D9-9C17-000A95C0F626</string>
+	<key>version</key>
+	<integer>2</integer>
 </dict>
 </plist>

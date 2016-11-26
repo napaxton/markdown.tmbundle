@@ -5,30 +5,33 @@
 	<key>beforeRunningCommand</key>
 	<string>nop</string>
 	<key>command</key>
-	<string>#!/usr/bin/env ruby18
+	<string>#!/usr/bin/env python
 
-$: &lt;&lt; ENV['TM_BUNDLE_SUPPORT']
-$: &lt;&lt; ENV['TM_SUPPORT_PATH']
+import os
+import sys
+import re
 
-require 'lib/markdown'
-require 'lib/escape'
+line = os.environ['TM_CURRENT_LINE']
+m = re.match(r'(#{1,5}(?!#))\s*(.+?)\s*(#*)$', line)
 
-# get the list itself
-listtxt = $stdin.read()
-list = Markdown::List.parse(listtxt)
-
-print list.to_s()
-</string>
+if m:
+    hashes = m.group(1) + '#'
+    heading = m.group(2).strip()
+    sys.stdout.write('%s %s' % (hashes, heading))
+    if m.group(3) != '':
+        sys.stdout.write(' %s' % hashes)
+else:
+    sys.stdout.write(line)</string>
 	<key>fallbackInput</key>
-	<string>scope</string>
+	<string>line</string>
 	<key>input</key>
 	<string>selection</string>
 	<key>inputFormat</key>
 	<string>text</string>
 	<key>keyEquivalent</key>
-	<string>^{</string>
+	<string>@]</string>
 	<key>name</key>
-	<string>Reformat</string>
+	<string>Increase Heading Level</string>
 	<key>outputCaret</key>
 	<string>heuristic</string>
 	<key>outputFormat</key>
@@ -36,9 +39,9 @@ print list.to_s()
 	<key>outputLocation</key>
 	<string>replaceInput</string>
 	<key>scope</key>
-	<string>text.html.markdown markup.list</string>
+	<string>L:markup.heading.*.markdown | R:markup.heading.*.markdown</string>
 	<key>uuid</key>
-	<string>5EFA9FF4-2246-4AF4-ABD6-2B7ADB4E9B80</string>
+	<string>7E9407AB-7A37-4CF8-B0E5-CBBA9AF8982A</string>
 	<key>version</key>
 	<integer>2</integer>
 </dict>
